@@ -14,50 +14,55 @@ import java.util.Map;
  * @author 984852
  */
 public class DBConnection {
+    private WordMap wordDefinition = new WordMap() ;
+    private static DBConnection connection;
+
+    private DBConnection() {
+        wordDefinition.put("A", new Definition("n", "A no 1"));
+        wordDefinition.put("A", new Definition("v", "A no 2"));
+        wordDefinition.put("A", new Definition("adj", "A no 3"));
+        
+        wordDefinition.put("B", new Definition("n", "B no 1"));
+        wordDefinition.put("B", new Definition("v", "B no 2"));
+        wordDefinition.put("B", new Definition("adj", "B no 3"));
+    }
+    
+    
+    public static DBConnection  getConnection(){
+        if (connection == null){
+            connection = new DBConnection();
+        }
+        return connection;
+    }
+    
+    public ArrayList<Definition> findDefinitions (String word) {
+        return wordDefinition.get(word);
+    }
+    
     
 }
 
-class WordMap<String, Word> {
+class WordMap<String, Definition> {
 
-    private Map<String, ArrayList<Word>> m = new HashMap<>();
+    private Map<String, ArrayList<Definition>> m = new HashMap<>();
 
-    public void put(String k, Word v) {
+    public void put(String k, Definition v) {
         if (m.containsKey(k)) {
             m.get(k).add(v);
         } else {
-            ArrayList<Word> arr = new ArrayList<>();
+            ArrayList<Definition> arr = new ArrayList<>();
             arr.add(v);
             m.put(k, arr);
         }
     }
 
-    public ArrayList<Word> get(String k) {
+    public ArrayList<Definition> get(String k) {
         return m.get(k);
     }
 
-    public Word get(String k, int index) {
+    public Definition get(String k, int index) {
         return m.get(k).size() - 1 < index ? null : m.get(k).get(index);
     }
 
 }
 
-class Word {
-
-   private String type;
-   private String meaning;
-
-    public Word(String type, String meaning) {
-        this.type = type;
-        this.meaning = meaning;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public String getMeaning() {
-        return meaning;
-    }
-    
-    
-}

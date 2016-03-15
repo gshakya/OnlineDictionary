@@ -5,8 +5,14 @@
  */
 package com.gunjan.businessLayer;
 
+import com.gunjan.dataAccessLayer.DBConnection;
+import com.gunjan.dataAccessLayer.Definition;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.stream.Collectors;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -29,19 +35,19 @@ public class dictServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet dictServlet</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet dictServlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+
+        String queryWord = request.getParameter("word");
+        System.out.println("queryword----------------" + queryWord);
+        DBConnection conn = DBConnection.getConnection();
+        ArrayList<Definition> wordDefinitions = conn.findDefinitions(queryWord);
+        if (wordDefinitions!=null) {
+            String definitions = wordDefinitions.stream().map(d -> "<br>" + d).collect(Collectors.joining());
+            request.setAttribute("definitions", definitions);
         }
+
+        RequestDispatcher dispatch = request.getRequestDispatcher("index.jsp");
+        dispatch.forward(request, response);
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -56,6 +62,8 @@ public class dictServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        request.setAttribute("definitions", "No Definition Found");
+        System.out.println("Get Method");
         processRequest(request, response);
     }
 
@@ -70,6 +78,8 @@ public class dictServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        request.setAttribute("definitions", "No Definition Found");
+        System.out.println("Post Method");
         processRequest(request, response);
     }
 
@@ -78,9 +88,4 @@ public class dictServlet extends HttpServlet {
      *
      * @return a String containing servlet description
      */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
 }
