@@ -15,8 +15,9 @@
         <title>WAP Online Dictionary</title>
     </head>
     <body>
+        <h1>WAP Online Dictionary</h1>
         <div class="form-wrapper cf">
-
+            
             <input id ="txtWord" type="text" name ="word" placeholder="Search Word here..." required>
             <button id  ="btnFindDef"> Find </button>
             

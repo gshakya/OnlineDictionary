@@ -9,6 +9,14 @@ and open the template in the editor.
 */
 
 /* Form wrapper styling */
+h1{
+  font: bold 35px Lato,"Helvetica Neue",Helvetica,Arial,sans-serif;
+  color: #E54040;
+  text-align: center;
+  text-shadow: 0 1px 3px rgba(0,0,0,.5);
+  margin: 50px auto 50px auto;
+}
+
 .cf:before, .cf:after{
     content:"";
     display:table;
@@ -23,9 +31,9 @@ and open the template in the editor.
 }    
 
 .form-wrapper {
-    width: 450px;
+    width: 550px;
     padding: 15px;
-    margin: 150px auto 50px auto;
+    margin: 50px auto 50px auto;
     background: #444;
     background: rgba(0,0,0,.2);
     border-radius: 10px;
@@ -43,7 +51,7 @@ and open the template in the editor.
 }
 
 .form-wrapper input {
-    width: 330px;
+    width: 430px;
     height: 20px;
     padding: 10px 5px;
     float: left;    

@@ -13,6 +13,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -105,6 +106,9 @@ class WordMap<String, Definition> {
     public Definition get(String k, int index) {
         return m.get(k).size() - 1 < index ? null : m.get(k).get(index);
     }
-
+    
+    public Set<String> getAllWords(){
+        return m.keySet();
+    }
 }
 
