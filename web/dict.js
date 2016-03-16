@@ -15,17 +15,16 @@ $(document).on("click", "#btnFindDef",
                     function (data) {
                         var defs = data.definitions;
 
-                       if (defs.length == 0) {
+                        if (defs.length == 0) {
                             $("#Definition").append("<br><br><br><br>Definition not found.");
                         } else {
-                            $("#Definition").append("<br><br><br><br><dl>");
+                            var defHTML = "";
+                            defHTML += "<br><br><br><br><ol class= 'defList'>";
                             for (var i = 0; i < defs.length; i++) {
-                                console.log(defs[i]);
-                                $("#Definition").append("<dt>" + defs[i].type + "</dt>");
-                                $("#Definition").append("<dd>" + defs[i].definition + "</dd>");
-
+                                defHTML += "<li> <strong>(" + defs[i].type + ")</strong> " + defs[i].definition +"</li>";
                             }
-                            $("#Definition").append("</dl>");
+                            defHTML += "</ol>";
+                            $("#Definition").html(defHTML);
                         }
                     });
 

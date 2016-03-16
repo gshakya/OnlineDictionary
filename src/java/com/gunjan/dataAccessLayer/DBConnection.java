@@ -44,7 +44,7 @@ public class DBConnection {
             conn= DriverManager.getConnection("jdbc:mysql://localhost/entries" , "entries" , "mysql");
 
             stmt = conn.createStatement();
-            if (stmt.execute("SELECT * FROM entries")) {
+            if (stmt.execute("SELECT * FROM entries order by 1,2")) {
                 rs = stmt.getResultSet();
             }
             
