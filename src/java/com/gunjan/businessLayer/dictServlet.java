@@ -72,7 +72,8 @@ public class dictServlet extends HttpServlet {
             defList.add(obj);
         }
         JSONObject mainObj = new JSONObject();
-        mainObj.put(word, defList);
+        mainObj.put("word", word);
+        mainObj.put("definitions", defList);
 
         StringWriter out = new StringWriter();
         mainObj.writeJSONString(out);

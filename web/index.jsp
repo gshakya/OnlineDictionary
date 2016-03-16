@@ -8,16 +8,21 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+        <script src="dict.js" type="text/javascript"></script>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <link href="dict.css" type="text/css" rel="stylesheet">
+        <title>WAP Online Dictionary</title>
     </head>
     <body>
-        <form method="get" action="getJSON" >
-            <input type="text" name ="word">
-            <input type="submit" value="Find">
-        </form>
-        <br>
-        <br>
-        <span> ${definitions}</span>
+        <div class="form-wrapper cf">
+
+            <input id ="txtWord" type="text" name ="word" placeholder="Search Word here..." required>
+            <button id  ="btnFindDef"> Find </button>
+            
+            <div id = "Definition" >
+            
+            </div>
+        </div> 
     </body>
 </html>
