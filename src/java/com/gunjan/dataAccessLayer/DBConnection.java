@@ -5,41 +5,83 @@
  */
 package com.gunjan.dataAccessLayer;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author 984852
  */
 public class DBConnection {
-    private WordMap wordDefinition = new WordMap() ;
+
     private static DBConnection connection;
+    private Connection conn = null;
+    private Statement stmt = null;
+    private ResultSet rs = null;
+    private WordMap wordDefinition = new WordMap();
 
     private DBConnection() {
-        wordDefinition.put("A", new Definition("n", "A no 1"));
-        wordDefinition.put("A", new Definition("v", "A no 2"));
-        wordDefinition.put("A", new Definition("adj", "A no 3"));
+         
+//          wordDefinition.put("A", new Definition("n", "A no 1"));
+//        wordDefinition.put("A", new Definition("v", "A no 2"));
+//        wordDefinition.put("A", new Definition("adj", "A no 3"));
+//        
+//        wordDefinition.put("B", new Definition("n", "B no 1"));
+//        wordDefinition.put("B", new Definition("v", "B no 2"));
+//        wordDefinition.put("B", new Definition("adj", "B no 3"));
         
-        wordDefinition.put("B", new Definition("n", "B no 1"));
-        wordDefinition.put("B", new Definition("v", "B no 2"));
-        wordDefinition.put("B", new Definition("adj", "B no 3"));
-    }
-    
-    
-    public static DBConnection  getConnection(){
-        if (connection == null){
-            connection = new DBConnection();
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            conn= DriverManager.getConnection("jdbc:mysql://localhost/entries" , "entries" , "mysql");
+
+            stmt = conn.createStatement();
+            if (stmt.execute("SELECT * FROM entries")) {
+                rs = stmt.getResultSet();
+            }
+            
+            while(rs.next()) { 
+                String word = rs.getString("word");
+//                System.out.println("-------Word--------"+word);
+                String wordtype = rs.getString("wordtype");
+                if(wordtype==null){
+                    wordtype = "";
+                }
+                String definition = rs.getString("definition");
+//                System.out.println(definition);
+                Definition def = new Definition(wordtype, definition);
+//                 System.out.println("Word Definiton:----------"+def);
+                wordDefinition.put(word.toLowerCase(),def );
+             }
+        } catch (SQLException ex) {
+            // handle any errors
+            System.out.println("SQLException: " + ex.getMessage());
+            System.out.println("SQLState: " + ex.getSQLState());
+            System.out.println("VendorError: " + ex.getErrorCode());
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return connection;
+
     }
     
-    public ArrayList<Definition> findDefinitions (String word) {
-        return wordDefinition.get(word);
-    }
-    
-    
+   public static DBConnection getConnection(){
+       if(connection== null){
+           connection = new DBConnection();
+       }
+       return connection;
+   }
+   
+   public ArrayList<Definition> getDefinition(String word){
+       return wordDefinition.get(word.toLowerCase());
+   }
+
 }
 
 class WordMap<String, Definition> {
@@ -57,7 +99,7 @@ class WordMap<String, Definition> {
     }
 
     public ArrayList<Definition> get(String k) {
-        return m.get(k);
+        return m.get(k.toString());
     }
 
     public Definition get(String k, int index) {

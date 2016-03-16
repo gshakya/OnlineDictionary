@@ -23,7 +23,7 @@ public class Definition {
         return type;
     }
 
-    public String getMeaning() {
+    public String getDefinition() {
         return meaning;
     }
     

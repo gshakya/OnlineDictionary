@@ -12,7 +12,7 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <form method="get" action="index" >
+        <form method="get" action="getJSON" >
             <input type="text" name ="word">
             <input type="submit" value="Find">
         </form>

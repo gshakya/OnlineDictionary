@@ -9,6 +9,7 @@ import com.gunjan.dataAccessLayer.DBConnection;
 import com.gunjan.dataAccessLayer.Definition;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.stream.Collectors;
@@ -17,6 +18,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 /**
  *
@@ -36,18 +39,46 @@ public class dictServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String queryWord = request.getParameter("word");
-        System.out.println("queryword----------------" + queryWord);
-        DBConnection conn = DBConnection.getConnection();
-        ArrayList<Definition> wordDefinitions = conn.findDefinitions(queryWord);
-        if (wordDefinitions!=null) {
-            String definitions = wordDefinitions.stream().map(d -> "<br>" + d).collect(Collectors.joining());
-            request.setAttribute("definitions", definitions);
-        }
+        String queryWord = request.getParameter("word").trim();
+//        System.out.println("queryword----------------" + queryWord);
+//        DBConnection conn = DBConnection.getConnection();
+//        System.out.println("conn  ------------------------" + conn);
+//        ArrayList<Definition> wordDefinitions = conn.getDefinition(queryWord);
+//        if (wordDefinitions != null) {
+//            String definitions = wordDefinitions.stream().map(d -> "<br>" + d).collect(Collectors.joining());
+//            request.setAttribute("definitions", definitions);
+//        }
+        String JSONObject = getJSONObjectForWord(queryWord);
+        request.getSession().setAttribute("JSONObject", JSONObject);
 
-        RequestDispatcher dispatch = request.getRequestDispatcher("index.jsp");
+        RequestDispatcher dispatch = request.getRequestDispatcher("getJSON.jsp");
         dispatch.forward(request, response);
 
+    }
+
+    protected String getJSONObjectForWord(String word) throws IOException {
+        DBConnection conn = DBConnection.getConnection();
+        ArrayList defs = conn.getDefinition(word);
+        if(defs == null){
+            defs = new ArrayList();
+        }
+        Iterator<Definition> it = defs.iterator();
+        JSONArray defList = new JSONArray();
+        while (it.hasNext()) {
+            Definition d = (Definition) it.next();
+            JSONObject obj = new JSONObject();
+            obj.put("type", d.getType());
+            obj.put("definition", d.getDefinition());
+            defList.add(obj);
+        }
+        JSONObject mainObj = new JSONObject();
+        mainObj.put(word, defList);
+
+        StringWriter out = new StringWriter();
+        mainObj.writeJSONString(out);
+
+        String jsonText = out.toString();
+        return jsonText;
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
